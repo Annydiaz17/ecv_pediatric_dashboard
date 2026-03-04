@@ -143,27 +143,227 @@ def predict_risk(model, scaler, edad, genero, peso, pas, fc, col):
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-    .main .block-container { max-width: 1200px; padding-top: 1rem; }
-    h1, h2, h3, h4 { font-family: 'Inter', sans-serif; }
+
+    /* ═══ General ═══ */
+    html, body, .main, .block-container, [data-testid="stAppViewContainer"] {
+        font-family: 'Inter', sans-serif !important;
+    }
+    .main .block-container {
+        max-width: 1200px;
+        padding-top: 1.5rem;
+        padding-bottom: 2rem;
+    }
+    h1 { font-size: 28px !important; font-weight: 800 !important; color: #0f2442 !important; }
+    h2 { font-size: 20px !important; font-weight: 700 !important; color: #1a4076 !important; }
+    h3 { font-size: 16px !important; font-weight: 600 !important; color: #1a4076 !important; }
+
+    /* ═══ Sidebar oscuro (estilo Dash) ═══ */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0a1628 0%, #0f2442 50%, #162d50 100%) !important;
+    }
+    [data-testid="stSidebar"] * {
+        color: #c8d6e5 !important;
+    }
+    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3, [data-testid="stSidebar"] .stMarkdown h3 {
+        color: #ffffff !important;
+    }
+    [data-testid="stSidebar"] .stRadio label {
+        color: #c8d6e5 !important;
+        font-size: 14px !important;
+        padding: 8px 12px !important;
+        border-radius: 8px !important;
+        transition: all 0.2s ease !important;
+    }
+    [data-testid="stSidebar"] .stRadio label:hover {
+        background: rgba(255,255,255,0.08) !important;
+        color: #ffffff !important;
+    }
+    [data-testid="stSidebar"] .stRadio [data-testid="stMarkdownContainer"] p {
+        font-size: 14px !important;
+    }
+    [data-testid="stSidebar"] hr {
+        border-color: rgba(255,255,255,0.1) !important;
+    }
+    [data-testid="stSidebar"] .stCaption, [data-testid="stSidebar"] small {
+        color: #8bb5d8 !important;
+    }
+
+    /* ═══ KPI Cards ═══ */
     .kpi-card {
-        background: white; border-radius: 12px; padding: 20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #e5e7eb;
-        border-top: 4px solid #1e5090; text-align: center;
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 22px 16px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        border: 1px solid #e5e7eb;
+        border-top: 4px solid #1e5090;
+        text-align: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .kpi-value { font-size: 28px; font-weight: 800; color: #0f2442; }
-    .kpi-label { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
+    .kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .kpi-value {
+        font-size: 30px;
+        font-weight: 800;
+        color: #0f2442;
+        line-height: 1.2;
+    }
+    .kpi-label {
+        font-size: 11px;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-top: 6px;
+        font-weight: 600;
+    }
+
+    /* ═══ Section Cards ═══ */
+    .section-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        border: 1px solid #e5e7eb;
+        margin-bottom: 16px;
+    }
+    .section-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1a4076;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* ═══ Semáforo ═══ */
     .semaforo-box {
-        border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 12px;
+        border-radius: 16px;
+        padding: 28px 20px;
+        text-align: center;
+        margin-bottom: 12px;
     }
-    .sem-verde { background: linear-gradient(135deg, #d1fae5, #ecfdf5); border: 2px solid #6ee7b7; }
-    .sem-amarillo { background: linear-gradient(135deg, #fef3c7, #fffbeb); border: 2px solid #fcd34d; }
-    .sem-rojo { background: linear-gradient(135deg, #fee2e2, #fef2f2); border: 2px solid #fca5a5; }
-    .diag-card {
-        border-radius: 12px; padding: 16px; margin-top: 8px;
+    .sem-verde {
+        background: linear-gradient(135deg, #d1fae5, #ecfdf5);
+        border: 2px solid #6ee7b7;
     }
+    .sem-amarillo {
+        background: linear-gradient(135deg, #fef3c7, #fffbeb);
+        border: 2px solid #fcd34d;
+    }
+    .sem-rojo {
+        background: linear-gradient(135deg, #fee2e2, #fef2f2);
+        border: 2px solid #fca5a5;
+    }
+
+    /* ═══ Model Banner ═══ */
+    .model-banner {
+        background: linear-gradient(135deg, #0f2442, #1a4076);
+        color: white;
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+    .model-banner .banner-item {
+        text-align: center;
+    }
+    .model-banner .banner-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        color: #8bb5d8;
+        letter-spacing: 0.5px;
+    }
+    .model-banner .banner-value {
+        font-weight: 700;
+        font-size: 16px;
+    }
+
+    /* ═══ Metrics (st.metric) ═══ */
+    [data-testid="stMetric"] {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 16px !important;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    [data-testid="stMetric"] label {
+        color: #6b7280 !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+    }
+    [data-testid="stMetric"] [data-testid="stMetricValue"] {
+        font-size: 28px !important;
+        font-weight: 800 !important;
+        color: #0f2442 !important;
+    }
+
+    /* ═══ Dataframe ═══ */
+    [data-testid="stDataFrame"] {
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+    }
+
+    /* ═══ Expander ═══ */
+    .streamlit-expanderHeader {
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        color: #1a4076 !important;
+        background: #f8fafc !important;
+        border-radius: 8px !important;
+    }
+
+    /* ═══ Buttons ═══ */
+    .stButton > button[kind="primary"] {
+        background: linear-gradient(135deg, #1e5090, #1a4076) !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 12px 24px !important;
+        font-weight: 700 !important;
+        font-size: 15px !important;
+        letter-spacing: 0.3px !important;
+        transition: all 0.3s ease !important;
+    }
+    .stButton > button[kind="primary"]:hover {
+        background: linear-gradient(135deg, #2563eb, #1e5090) !important;
+        box-shadow: 0 4px 16px rgba(30,80,144,0.3) !important;
+        transform: translateY(-1px) !important;
+    }
+
+    /* ═══ Info/Success/Warning boxes ═══ */
+    .stAlert {
+        border-radius: 10px !important;
+        font-size: 13px !important;
+    }
+
+    /* ═══ Footer ═══ */
     .footer-text {
-        text-align: center; font-size: 11px; color: #9ca3af;
-        padding: 16px 0; border-top: 1px solid #e5e7eb; margin-top: 32px;
+        text-align: center;
+        font-size: 11px;
+        color: #9ca3af;
+        padding: 20px 0;
+        border-top: 1px solid #e5e7eb;
+        margin-top: 40px;
+    }
+
+    /* ═══ Divider ═══ */
+    hr {
+        border: none !important;
+        border-top: 1px solid #e5e7eb !important;
+        margin: 16px 0 !important;
+    }
+
+    /* ═══ Tabs in radio ═══ */
+    [data-testid="stSidebar"] [role="radiogroup"] {
+        gap: 4px !important;
     }
 </style>
 """, unsafe_allow_html=True)
