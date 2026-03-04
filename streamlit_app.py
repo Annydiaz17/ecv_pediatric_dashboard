@@ -275,12 +275,19 @@ def render_tab_eda():
         fig_b.update_layout(font_family="Inter", height=350, showlegend=False)
         st.plotly_chart(fig_b, use_container_width=True)
 
-    # Correlación
+    # Correlación (sobre training set, replicando notebook SEMMA)
     st.subheader("Matriz de Correlación de Pearson")
-    st.caption("Destaca: **Edad-Peso (0.91)** y **Colesterol-Riesgo CV (0.41)**")
-    cols_corr = ["edad", "peso_kg", "pa_sistolica", "colesterol_mgdl", "frecuencia_cardiaca", TARGET]
-    corr = df[cols_corr].corr()
-    labels_c = ["Edad", "Peso", "PAS", "Colesterol", "FC", "Riesgo CV"]
+    st.caption("Calculada sobre el conjunto de entrenamiento (80%) — Destaca: **Edad-Peso (0.91)** y **Colesterol-Riesgo CV (0.41)**")
+    num_cols_corr = ["edad", "peso_kg", "frecuencia_cardiaca", "colesterol_mgdl", "pa_sistolica"]
+    df_corr = df[FEATURES_MODELO + [TARGET]].dropna()
+    X_corr = df_corr[FEATURES_MODELO]
+    y_corr = df_corr[TARGET].astype(int)
+    X_train_corr, _, y_train_corr, _ = train_test_split(
+        X_corr, y_corr, test_size=0.2, random_state=42, stratify=y_corr)
+    df_train_eda = X_train_corr.copy()
+    df_train_eda[TARGET] = y_train_corr.values
+    corr = df_train_eda[num_cols_corr + [TARGET]].corr()
+    labels_c = ["Edad", "Peso", "FC", "Colesterol", "PAS", "Riesgo CV"]
     fig_c = go.Figure(go.Heatmap(
         z=corr.values, x=labels_c, y=labels_c,
         colorscale=[[0, "#2563eb"], [0.5, "#fff"], [1, "#dc2626"]],
