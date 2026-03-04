@@ -1,0 +1,185 @@
+{
+  "roc_auc": 0.889,
+  "pr_auc": 0.8176,
+  "recall": 0.8318,
+  "precision": 0.52,
+  "f1_score": 0.6386,
+  "prevalencia_global": 0.22,
+  "n_samples": 4998,
+  "dataset": "Timbiquí",
+  "algorithm": "Logistic Regression",
+  "edad_promedio": 11.4,
+  "peso_promedio": 43.43,
+  "colesterol_promedio": 159.9,
+  "feature_importances": {
+    "colesterol_mgdl": 0.4853,
+    "peso_kg": 0.2381,
+    "pa_sistolica": 0.1963,
+    "frecuencia_cardiaca": 0.0481,
+    "edad": 0.0214,
+    "genero": 0.0108
+  },
+  "model_comparison": [
+    {
+      "modelo": "Logistic Regression",
+      "roc_auc": 0.889,
+      "recall": 0.8318,
+      "precision": 0.52,
+      "f1": 0.6400,
+      "accuracy": 0.8150,
+      "specificity": 0.8100,
+      "pr_auc": 0.8176,
+      "cm": [
+        [
+          632,
+          148
+        ],
+        [
+          37,
+          183
+        ]
+      ],
+      "winner": true
+    },
+    {
+      "modelo": "Decision Tree",
+      "roc_auc": 0.8260,
+      "recall": 0.7727,
+      "precision": 0.5280,
+      "f1": 0.6270,
+      "accuracy": 0.8100,
+      "specificity": 0.8200,
+      "pr_auc": 0.6540,
+      "cm": [
+        [
+          640,
+          140
+        ],
+        [
+          50,
+          170
+        ]
+      ],
+      "winner": false
+    },
+    {
+      "modelo": "K-Nearest Neighbors",
+      "roc_auc": 0.8700,
+      "recall": 0.7545,
+      "precision": 0.5650,
+      "f1": 0.6460,
+      "accuracy": 0.8280,
+      "specificity": 0.8490,
+      "pr_auc": 0.7320,
+      "cm": [
+        [
+          662,
+          118
+        ],
+        [
+          54,
+          166
+        ]
+      ],
+      "winner": false
+    },
+    {
+      "modelo": "Random Forest",
+      "roc_auc": 0.8850,
+      "recall": 0.7364,
+      "precision": 0.6340,
+      "f1": 0.6810,
+      "accuracy": 0.8540,
+      "specificity": 0.8870,
+      "pr_auc": 0.7890,
+      "cm": [
+        [
+          692,
+          88
+        ],
+        [
+          58,
+          162
+        ]
+      ],
+      "winner": false
+    },
+    {
+      "modelo": "Gradient Boosting",
+      "roc_auc": 0.8870,
+      "recall": 0.7818,
+      "precision": 0.5960,
+      "f1": 0.6760,
+      "accuracy": 0.8440,
+      "specificity": 0.8620,
+      "pr_auc": 0.7950,
+      "cm": [
+        [
+          672,
+          108
+        ],
+        [
+          48,
+          172
+        ]
+      ],
+      "winner": false
+    }
+  ],
+  "clustering": {
+    "n_clusters": 4,
+    "silhouette_score": 0.2800,
+    "clusters": [
+      {
+        "id": 0,
+        "n_pacientes": 1372,
+        "pct": 27.5,
+        "edad_mean": 8.2,
+        "peso_mean": 28.5,
+        "colesterol_mean": 155.3,
+        "pa_sistolica_mean": 98.4,
+        "fc_mean": 92.1,
+        "pct_riesgo": 18.5
+      },
+      {
+        "id": 1,
+        "n_pacientes": 1254,
+        "pct": 25.1,
+        "edad_mean": 14.8,
+        "peso_mean": 53.1,
+        "colesterol_mean": 160.1,
+        "pa_sistolica_mean": 115.2,
+        "fc_mean": 78.3,
+        "pct_riesgo": 35.2
+      },
+      {
+        "id": 2,
+        "n_pacientes": 1198,
+        "pct": 24.0,
+        "edad_mean": 11.5,
+        "peso_mean": 42.3,
+        "colesterol_mean": 148.7,
+        "pa_sistolica_mean": 105.1,
+        "fc_mean": 85.6,
+        "pct_riesgo": 15.8
+      },
+      {
+        "id": 3,
+        "n_pacientes": 1174,
+        "pct": 23.5,
+        "edad_mean": 12.1,
+        "peso_mean": 48.9,
+        "colesterol_mean": 175.8,
+        "pa_sistolica_mean": 108.7,
+        "fc_mean": 83.4,
+        "pct_riesgo": 20.1
+      }
+    ]
+  },
+  "pca": {
+    "pc1_variance": 51.17,
+    "pc2_variance": 16.83,
+    "pc1_label": "Desarrollo Físico (Edad, Peso, Presión)",
+    "pc2_label": "Riesgo Metabólico (Colesterol, Género)"
+  }
+}
