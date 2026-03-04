@@ -91,8 +91,8 @@ def load_data():
         df["pa_sistolica"] = df["pa_sistolica"].apply(
             lambda v: float(str(v).replace(",", ".")) if pd.notna(v) else np.nan)
     # Filtrar rangos
-    rangos = {"edad": (6, 17), "peso_kg": (5, 150), "pa_sistolica": (50, 200),
-              "frecuencia_cardiaca": (30, 250), "colesterol_mgdl": (50, 400)}
+    rangos = {"edad": (6, 17), "peso_kg": (15, 120), "pa_sistolica": (60, 180),
+              "frecuencia_cardiaca": (40, 200), "colesterol_mgdl": (80, 350)}
     for col, (lo, hi) in rangos.items():
         if col in df.columns:
             df = df[df[col].between(lo, hi) | df[col].isna()]
@@ -277,7 +277,7 @@ def render_tab_eda():
 
     # Correlación
     st.subheader("Matriz de Correlación de Pearson")
-    st.caption("Destaca: **Edad-Peso (0.78)** y **Colesterol-Riesgo CV (0.42)**")
+    st.caption("Destaca: **Edad-Peso (0.91)** y **Colesterol-Riesgo CV (0.41)**")
     cols_corr = ["edad", "peso_kg", "pa_sistolica", "colesterol_mgdl", "frecuencia_cardiaca", TARGET]
     corr = df[cols_corr].corr()
     labels_c = ["Edad", "Peso", "PAS", "Colesterol", "FC", "Riesgo CV"]

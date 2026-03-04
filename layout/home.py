@@ -218,9 +218,9 @@ def create_home_layout():
             ], className="card-header"),
             html.P([
                 "Destaca la fuerte correlación entre ",
-                html.Strong("Edad y Peso (0.78)"),
+                html.Strong("Edad y Peso (0.91)"),
                 " y la correlación del ",
-                html.Strong("Colesterol con Riesgo CV (0.42)"),
+                html.Strong("Colesterol con Riesgo CV (0.41)"),
                 "."
             ], style={"fontSize": "13px", "color": "#6b7280", "marginBottom": "8px"}),
             dcc.Graph(id="eda-correlation", config={"displayModeBar": True}),
