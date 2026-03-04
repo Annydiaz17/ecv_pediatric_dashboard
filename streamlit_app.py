@@ -64,10 +64,17 @@ def load_data():
     """Carga el dataset Timbiquí."""
     path = os.path.join(BASE_DIR, "data", "dataset_timbiqui.csv")
     df = pd.read_csv(path)
+    # Limpiar espacios en nombres de columna
+    df.columns = df.columns.str.strip()
+    # Mapeo real del CSV: EDAD, genero, Peso_kg, PA_Sistolica, frecuencia_Cardiaca, Colesterol_mgdl, RIESGO
     rename = {
-        "Edad": "edad", "Genero": "genero", "Peso_kg": "peso_kg",
-        "PA_Sistolica": "pa_sistolica", "Frecuencia_Cardiaca": "frecuencia_cardiaca",
-        "Colesterol_mg_dl": "colesterol_mgdl", "Riesgo_CV": "riesgo_cv",
+        "EDAD": "edad", "Edad": "edad",
+        "genero": "genero", "Genero": "genero",
+        "Peso_kg": "peso_kg", "peso_kg": "peso_kg",
+        "PA_Sistolica": "pa_sistolica", "pa_sistolica": "pa_sistolica",
+        "frecuencia_Cardiaca": "frecuencia_cardiaca", "Frecuencia_Cardiaca": "frecuencia_cardiaca",
+        "Colesterol_mgdl": "colesterol_mgdl", "Colesterol_mg_dl": "colesterol_mgdl",
+        "RIESGO": "riesgo_cv", "Riesgo_CV": "riesgo_cv", "riesgo_cv": "riesgo_cv",
     }
     df.rename(columns={k: v for k, v in rename.items() if k in df.columns}, inplace=True)
     # Limpiar género
