@@ -407,50 +407,74 @@ def render_tab_eda():
     n_alto = int(df[TARGET].sum())
     n_bajo = n_total - n_alto
 
-    # KPIs
+    # KPIs con íconos y sublabels (igual a Dash)
     c1, c2, c3, c4 = st.columns(4)
     with c1:
         st.markdown(f"""<div class="kpi-card">
+            <div style="font-size:28px; margin-bottom:6px;">👥</div>
             <div class="kpi-value">{n_total:,}</div>
             <div class="kpi-label">Total Pacientes</div>
+            <div style="font-size:10px; color:#9ca3af; margin-top:4px;">Pacientes analizados (6-17 años)</div>
         </div>""", unsafe_allow_html=True)
     with c2:
         st.markdown(f"""<div class="kpi-card" style="border-top-color: #1a4076;">
+            <div style="font-size:28px; margin-bottom:6px;">🎂</div>
             <div class="kpi-value">{metrics.get('edad_promedio', 11.4)} años</div>
             <div class="kpi-label">Edad Promedio</div>
+            <div style="font-size:10px; color:#9ca3af; margin-top:4px;">Rango pediátrico evaluado</div>
         </div>""", unsafe_allow_html=True)
     with c3:
         st.markdown(f"""<div class="kpi-card" style="border-top-color: #059669;">
+            <div style="font-size:28px; margin-bottom:6px;">⚖️</div>
             <div class="kpi-value">{metrics.get('peso_promedio', 43.43)} kg</div>
             <div class="kpi-label">Peso Promedio</div>
+            <div style="font-size:10px; color:#9ca3af; margin-top:4px;">Peso corporal medio</div>
         </div>""", unsafe_allow_html=True)
     with c4:
         st.markdown(f"""<div class="kpi-card" style="border-top-color: #d97706;">
-            <div class="kpi-value">{metrics.get('colesterol_promedio', 159.9)}</div>
-            <div class="kpi-label">Colesterol Promedio (mg/dL)</div>
+            <div style="font-size:28px; margin-bottom:6px;">🧪</div>
+            <div class="kpi-value">{metrics.get('colesterol_promedio', 159.9)} mg/dL</div>
+            <div class="kpi-label">Colesterol Promedio</div>
+            <div style="font-size:10px; color:#9ca3af; margin-top:4px;">Marcador metabólico clave</div>
         </div>""", unsafe_allow_html=True)
 
     st.markdown("")
 
-    # Donut + Detalle
+    # Donut + Detalle con tarjetas estilizadas (igual a Dash)
     col_d, col_r = st.columns([1, 1])
     with col_d:
-        st.subheader("Distribución de Riesgo CV")
+        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        st.markdown('#### ℹ️ Distribución de Riesgo Cardiovascular')
         fig = go.Figure(go.Pie(
-            labels=["Sin Riesgo (78%)", "Con Riesgo (22%)"],
+            labels=["Sin Riesgo (78.0%)", "Con Riesgo (22.0%)"],
             values=[n_bajo, n_alto], hole=0.55,
             marker=dict(colors=["#4682B4", "#CD5C5C"]),
             textinfo="label+percent",
+            textfont=dict(family="Inter", size=12),
         ))
         fig.update_layout(margin=dict(l=10, r=10, t=10, b=10), showlegend=False,
-                          height=300, paper_bgcolor="rgba(0,0,0,0)")
+                          height=300, paper_bgcolor="rgba(0,0,0,0)", font_family="Inter")
         st.plotly_chart(fig, use_container_width=True)
-        st.info("⚖️ Desbalance: 78% sin riesgo vs 22% con riesgo. Se usa `class_weight='balanced'`.")
+        st.info("⚖️ Desbalance de clases: 78% sin riesgo vs 22% con riesgo. Se usa `class_weight='balanced'` para compensar.")
+        st.markdown('</div>', unsafe_allow_html=True)
 
     with col_r:
-        st.subheader("Detalle por Categoría")
-        st.metric("Sin Riesgo (Clase 0)", f"{n_bajo:,}", f"{n_bajo/n_total*100:.1f}%")
-        st.metric("Con Riesgo (Clase 1)", f"{n_alto:,}", f"{n_alto/n_total*100:.1f}%")
+        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        st.markdown('#### 👥 Detalle por Categoría de Riesgo')
+        st.markdown("")
+        # Sin riesgo - tarjeta verde
+        st.markdown(f"""<div style="text-align:center; padding:20px; background:#d1fae5; border-radius:12px; margin-bottom:16px;">
+            <div style="font-size:14px; color:#6b7280; margin-bottom:8px;">Sin Riesgo (Clase 0)</div>
+            <div style="font-size:42px; font-weight:800; color:#059669;">{n_bajo:,}</div>
+            <div style="font-size:18px; font-weight:600; color:#059669;">{n_bajo/n_total*100:.1f}%</div>
+        </div>""", unsafe_allow_html=True)
+        # Con riesgo - tarjeta roja
+        st.markdown(f"""<div style="text-align:center; padding:20px; background:#fee2e2; border-radius:12px;">
+            <div style="font-size:14px; color:#6b7280; margin-bottom:8px;">Con Riesgo (Clase 1)</div>
+            <div style="font-size:42px; font-weight:800; color:#dc2626;">{n_alto:,}</div>
+            <div style="font-size:18px; font-weight:600; color:#dc2626;">{n_alto/n_total*100:.1f}%</div>
+        </div>""", unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
     # Histogramas
     st.subheader("Histogramas Comparativos por Clase")
@@ -550,33 +574,69 @@ def render_tab_segmentation():
     )
     st.plotly_chart(fig_s, use_container_width=True)
 
-    # Cluster cards
+    # Cluster cards (estilizadas como Dash)
     st.subheader("Resultados del Clustering (K=4)")
     cols = st.columns(4)
     for i, c in enumerate(clusters):
         with cols[i]:
-            riesgo_color = "🔴" if c["pct_riesgo"] > 25 else "🟢"
-            st.markdown(f"""
-            **Cluster {c['id']}** {'⚠️' if c['id'] == 1 else ''}
-            - Pacientes: **{c['n_pacientes']:,}** ({c['pct']}%)
-            - {riesgo_color} Riesgo: **{c['pct_riesgo']}%**
-            - Edad: {c['edad_mean']} años
-            - Peso: {c['peso_mean']} kg
-            - Col: {c['colesterol_mean']} mg/dL
-            - PAS: {c['pa_sistolica_mean']} mmHg
-            """)
+            is_high = c["id"] == 1
+            border_c = "#CD5C5C" if is_high else "#e5e7eb"
+            bg_c = "#fef2f2" if is_high else "#f9fafb"
+            badge = '<div style="background:#fee2e2; color:#991b1b; font-size:11px; font-weight:700; padding:2px 10px; border-radius:12px; display:inline-block; margin-bottom:8px;">⚠ Mayor Riesgo</div>' if is_high else ""
+            risk_c = "#dc2626" if c["pct_riesgo"] > 25 else "#4b5563"
+            st.markdown(f"""<div style="padding:16px; background:{bg_c}; border-radius:12px; border:2px solid {border_c};">
+                {badge}
+                <div style="font-size:18px; font-weight:700; color:#1a4076; margin-bottom:4px;">Cluster {c['id']}</div>
+                <div style="font-size:13px; color:#6b7280; margin-bottom:12px;">{c['n_pacientes']:,} pacientes ({c['pct']}%)</div>
+                <div style="margin-bottom:4px;"><span style="font-size:12px; color:#6b7280;">Riesgo CV: </span><span style="font-size:12px; font-weight:600; color:{risk_c};">{c['pct_riesgo']}%</span></div>
+                <div style="margin-bottom:4px;"><span style="font-size:12px; color:#6b7280;">Edad: </span><span style="font-size:12px; font-weight:600;">{c['edad_mean']} años</span></div>
+                <div style="margin-bottom:4px;"><span style="font-size:12px; color:#6b7280;">Peso: </span><span style="font-size:12px; font-weight:600;">{c['peso_mean']} kg</span></div>
+                <div style="margin-bottom:4px;"><span style="font-size:12px; color:#6b7280;">Colesterol: </span><span style="font-size:12px; font-weight:600;">{c['colesterol_mean']} mg/dL</span></div>
+                <div><span style="font-size:12px; color:#6b7280;">PAS: </span><span style="font-size:12px; font-weight:600;">{c['pa_sistolica_mean']} mmHg</span></div>
+            </div>""", unsafe_allow_html=True)
 
     # Prevalencia
+    st.subheader("Prevalencia de Riesgo por Cluster")
     fig_p = go.Figure()
     ids = [f"Cluster {c['id']}" for c in clusters]
     pcts = [c["pct_riesgo"] for c in clusters]
     fig_p.add_trace(go.Bar(x=ids, y=pcts, marker_color=["#4682B4", "#CD5C5C", "#2E8B57", "#DAA520"],
-                           text=[f"{p}%" for p in pcts], textposition="outside"))
+                           text=[f"{p}%" for p in pcts], textposition="outside",
+                           textfont=dict(family="Inter", size=13, color="#374151")))
     fig_p.add_hline(y=22.0, line_dash="dash", line_color="#dc2626",
-                    annotation_text="Media global (22%)")
-    fig_p.update_layout(yaxis_title="% Riesgo CV", height=350, template="plotly_white",
-                       font_family="Inter")
+                    annotation_text="Media global (22%)", annotation_position="top right",
+                    annotation_font=dict(size=12, color="#dc2626"))
+    fig_p.update_layout(yaxis_title="% Pacientes con Riesgo CV", xaxis_title="Cluster",
+                       height=350, template="plotly_white", font_family="Inter",
+                       margin=dict(l=40, r=20, t=40, b=40), showlegend=False)
     st.plotly_chart(fig_p, use_container_width=True)
+
+    # Perfil clínico heatmap (igual que Dash)
+    if clusters:
+        st.subheader("Perfil Clínico Promedio por Cluster")
+        variables = ["Edad", "Peso (kg)", "Colesterol", "PAS", "FC", "% Riesgo"]
+        cluster_ids = [f"Cluster {c['id']}" for c in clusters]
+        z_vals, text_vals = [], []
+        for c in clusters:
+            row = [c["edad_mean"], c["peso_mean"], c["colesterol_mean"],
+                   c["pa_sistolica_mean"], c.get("fc_mean", 80), c["pct_riesgo"]]
+            z_vals.append(row)
+            text_vals.append([str(v) for v in row])
+        z_arr = np.array(z_vals, dtype=float)
+        z_norm = np.zeros_like(z_arr)
+        for j in range(z_arr.shape[1]):
+            col_min, col_max = z_arr[:, j].min(), z_arr[:, j].max()
+            z_norm[:, j] = (z_arr[:, j] - col_min) / (col_max - col_min) if col_max > col_min else 0.5
+        fig_hm = go.Figure(go.Heatmap(
+            z=z_norm, x=variables, y=cluster_ids,
+            text=text_vals, texttemplate="%{text}",
+            textfont=dict(size=13, family="Inter"),
+            colorscale="YlOrRd", showscale=True,
+            colorbar=dict(title="Normalizado"),
+        ))
+        fig_hm.update_layout(template="plotly_white", font_family="Inter",
+                            margin=dict(l=20, r=20, t=20, b=40), height=280)
+        st.plotly_chart(fig_hm, use_container_width=True)
 
 
 # ═══════════════════════════════════════════════════════════════
