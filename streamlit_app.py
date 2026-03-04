@@ -277,7 +277,7 @@ def render_tab_eda():
 
     # Correlación
     st.subheader("Matriz de Correlación de Pearson")
-    st.caption("Destaca: **Edad-Peso (0.91)** y **Colesterol-Riesgo CV (0.41)**")
+    st.caption("Destaca: **Edad-Peso (0.78)** y **Colesterol-Riesgo CV (0.42)**")
     cols_corr = ["edad", "peso_kg", "pa_sistolica", "colesterol_mgdl", "frecuencia_cardiaca", TARGET]
     corr = df[cols_corr].corr()
     labels_c = ["Edad", "Peso", "PAS", "Colesterol", "FC", "Riesgo CV"]
